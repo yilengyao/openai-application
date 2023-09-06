@@ -22,6 +22,9 @@ import io.github.yilengyao.openai.graphql.generated.types.EditInput;
 import io.github.yilengyao.openai.graphql.generated.types.EditResponse;
 import io.github.yilengyao.openai.graphql.generated.types.ImageResponse;
 import io.github.yilengyao.openai.graphql.generated.types.ModelsOutput;
+import io.github.yilengyao.openai.graphql.generated.types.TranscriptionInput;
+import io.github.yilengyao.openai.graphql.generated.types.TextResponse;
+import io.github.yilengyao.openai.model.audio.TranscriptionPayload;
 import io.github.yilengyao.openai.model.chat.ChatCompletionChunk;
 import io.github.yilengyao.openai.model.chat.ChatCompletionPayload;
 import io.github.yilengyao.openai.model.completion.CompletionPayload;
@@ -37,6 +40,14 @@ public class OpenAiDataFetcher {
   @Autowired
   public OpenAiDataFetcher(OpenAiClient openAiClient) {
     this.openAiClient = openAiClient;
+  }
+
+  @DgsMutation
+  public TextResponse createTranscription(
+      @InputArgument("file") MultipartFile file,
+      @InputArgument("transcriptionInput") TranscriptionInput transcriptionInput) throws IOException {
+    return openAiClient.createTranscription(TranscriptionPayload.fromGraphQl(file, transcriptionInput))
+        .toGraphQl();
   }
 
   @DgsQuery
@@ -61,9 +72,9 @@ public class OpenAiDataFetcher {
     if (chatInput.getStream() != null && chatInput.getStream()) {
       return openAiClient
           .streamChatCompletion(ChatCompletionPayload.fromGraphQl(chatInput))
-      .next()
-      .map(ChatCompletionChunk::toGraphQl)
-      .block();
+          .next()
+          .map(ChatCompletionChunk::toGraphQl)
+          .block();
     } else {
       return openAiClient
           .createChatCompletion(ChatCompletionPayload.fromGraphQl(chatInput))
