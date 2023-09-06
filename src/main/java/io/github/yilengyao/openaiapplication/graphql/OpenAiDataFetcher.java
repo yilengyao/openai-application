@@ -23,8 +23,10 @@ import io.github.yilengyao.openai.graphql.generated.types.EditResponse;
 import io.github.yilengyao.openai.graphql.generated.types.ImageResponse;
 import io.github.yilengyao.openai.graphql.generated.types.ModelsOutput;
 import io.github.yilengyao.openai.graphql.generated.types.TranscriptionInput;
+import io.github.yilengyao.openai.graphql.generated.types.TranslationInput;
 import io.github.yilengyao.openai.graphql.generated.types.TextResponse;
 import io.github.yilengyao.openai.model.audio.TranscriptionPayload;
+import io.github.yilengyao.openai.model.audio.TranslationPayload;
 import io.github.yilengyao.openai.model.chat.ChatCompletionChunk;
 import io.github.yilengyao.openai.model.chat.ChatCompletionPayload;
 import io.github.yilengyao.openai.model.completion.CompletionPayload;
@@ -47,6 +49,14 @@ public class OpenAiDataFetcher {
       @InputArgument("file") MultipartFile file,
       @InputArgument("transcriptionInput") TranscriptionInput transcriptionInput) throws IOException {
     return openAiClient.createTranscription(TranscriptionPayload.fromGraphQl(file, transcriptionInput))
+        .toGraphQl();
+  }
+
+  @DgsMutation
+  public TextResponse createTranslation(
+      @InputArgument("file") MultipartFile file,
+      @InputArgument("translationInput") TranslationInput translationInput) throws IOException {
+    return openAiClient.createTranslation(TranslationPayload.fromGraphQl(file, translationInput))
         .toGraphQl();
   }
 
