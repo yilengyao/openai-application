@@ -31,8 +31,6 @@
       <groupId>io.github.yilengyao</groupId>
       <artifactId>openai</artifactId>
       <version>${openai.version}</version>
-      <scope>system</scope>
-      <systemPath>/openai-library/target/openai-1.0.0.jar</systemPath>
     </dependency>
 
     <!-- GraphQL -->
